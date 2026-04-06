@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="dark">
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3LMJ9J92XD"></script>
@@ -1090,7 +1090,10 @@ nav {
         <div class="surah-grid" id="surahGrid"><div style="padding:40px;text-align:center;color:var(--mt);">جاري التحميل...</div></div>
       </div>
       <div id="reader-view" style="display:none">
-        <button onclick="backToList()" style="margin:12px 20px;padding:6px 16px;background:transparent;border:1px solid var(--br);color:var(--g);border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;">← العودة للسور</button>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;">
+          <button onclick="backToList()" style="padding:6px 16px;background:transparent;border:1px solid var(--br);color:var(--g);border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;">← العودة للسور</button>
+          <button id="autoScrollBtnReader" onclick="toggleAutoScroll()" style="background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);color:#d4a843;padding:6px 14px;border-radius:20px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;">▶ تصفح تلقائي</button>
+        </div>
         <div style="padding:16px;text-align:center;">
           <div style="font-family:'Amiri';font-size:32px;color:var(--g);" id="readerName"></div>
         </div>
@@ -1315,25 +1318,27 @@ let autoScrollInterval=null;
 let autoScrolling=false;
 function toggleAutoScroll(){
   const btn=document.getElementById('autoScrollBtn');
-  const grid=document.getElementById('surahGrid');
-  if(!grid)return;
+  const btnR=document.getElementById('autoScrollBtnReader');
   if(autoScrolling){
     clearInterval(autoScrollInterval);
     autoScrolling=false;
-    btn.innerHTML='▶ تصفح تلقائي';
-    btn.style.background='rgba(212,168,67,.12)';
+    if(btn){btn.innerHTML='▶ تصفح تلقائي';btn.style.background='rgba(212,168,67,.12)';}
+    if(btnR){btnR.innerHTML='▶ تصفح تلقائي';btnR.style.background='rgba(212,168,67,.12)';}
   }else{
     autoScrolling=true;
-    btn.innerHTML='⏸ إيقاف التصفح';
-    btn.style.background='rgba(212,168,67,.3)';
+    if(btn){btn.innerHTML='⏸ إيقاف';btn.style.background='rgba(212,168,67,.3)';}
+    if(btnR){btnR.innerHTML='⏸ إيقاف';btnR.style.background='rgba(212,168,67,.3)';}
     autoScrollInterval=setInterval(()=>{
       const maxScroll=document.documentElement.scrollHeight-window.innerHeight;
-      if(window.scrollY>=maxScroll-10){
-        window.scrollTo({top:0,behavior:'smooth'});
+      if(window.scrollY>=maxScroll-20){
+        clearInterval(autoScrollInterval);
+        autoScrolling=false;
+        if(btn){btn.innerHTML='▶ تصفح تلقائي';btn.style.background='rgba(212,168,67,.12)';}
+        if(btnR){btnR.innerHTML='▶ تصفح تلقائي';btnR.style.background='rgba(212,168,67,.12)';}
       }else{
-        window.scrollBy({top:180,behavior:'smooth'});
+        window.scrollBy({top:60,behavior:'smooth'});
       }
-    },2200);
+    },1800);
   }
 }
 
